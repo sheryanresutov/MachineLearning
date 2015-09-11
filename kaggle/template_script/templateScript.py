@@ -33,12 +33,13 @@ def doScript(submissionFolder,model):
             if(label_set[i] != predicted[i]):
                 count=count+1
 
-    print("Accuracy: "+str((1-count/7767.000)))                
+    accuracy = str(1-count/7767.000)
+    print("Accuracy: "+accuracy)                
 
     with open(testFile,mode='rb') as file:
         test = pd.DataFrame(pd.read_csv(file))
     X_test=test.values.tolist()
     X_test=np.asarray(X_test, dtype=np.double)
     test_predicted = model.predict(X_test)
-    np.savetxt("../"+submissionFolder+"/submissions/"+str(datetime.datetime.now().time())+".csv",test_predicted)
+    np.savetxt("../"+submissionFolder+"/submissions/"+model+"_"+accuracy+"_"+str(datetime.datetime.now().time())+".csv",test_predicted)
 

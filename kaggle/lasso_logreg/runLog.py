@@ -4,4 +4,4 @@ sys.path.append('../template_script')
 import templateScript
 
 log = linear_model.LogisticRegression(C=1e5)
-templateScript.doScript("lasso_logreg",log)
+templateScript.doScript("linear_reg",log)

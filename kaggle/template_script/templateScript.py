@@ -41,5 +41,5 @@ def doScript(submissionFolder,model):
     X_test=test.values.tolist()
     X_test=np.asarray(X_test, dtype=np.double)
     test_predicted = model.predict(X_test)
-    np.savetxt("../"+submissionFolder+"/submissions/"+model+"_"+accuracy+"_"+str(datetime.datetime.now().time())+".csv",test_predicted)
+    np.savetxt("../"+submissionFolder+"/submissions/"+str(model)+"_"+accuracy+"_"+str(datetime.datetime.now().time())+".csv",test_predicted)
 

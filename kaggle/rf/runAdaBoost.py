@@ -1,7 +1,7 @@
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier
 import sys
 sys.path.append('../template_script')
 import templateScript
 
-rf = RandomForestClassifier(n_estimators=200, max_features='log2', bootstrap=False)
+rf = AdaBoostClassifier(n_estimators=200, learning_rate=1)
 templateScript.doScript("rf",rf)

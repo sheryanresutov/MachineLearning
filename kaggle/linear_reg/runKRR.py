@@ -1,7 +1,7 @@
-from sklearn import linear_model
+from sklearn.kernel_ridge import KernelRidge
 import sys
 sys.path.append('../template_script')
 import templateScript
 
-log = linear_model.LogisticRegression(C=1e5)
-templateScript.doScript("linear_reg",log)
+kr = KernelRidge(alpha=0.1)
+templateScript.doScript("linear_reg",kr)

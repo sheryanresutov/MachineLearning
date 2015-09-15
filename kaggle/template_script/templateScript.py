@@ -19,9 +19,6 @@ b = [i[561] for i in X]
 b = np.asarray(b,dtype=np.double)
 cv = cross_validation.KFold(len(X), n_folds=5)
 
-#XX=X
-#RFECV(SVR(kernel="linear"), step=1, cv=5).fit_transform(np.delete(XX,561,1), b)
-
 def doScript(submissionFolder,model):
     count=0
     for traincv, testcv in cv:

@@ -6,8 +6,8 @@ close all
 clc
 
 %%% For Gaussian RV with unknown mean and variance
-mu = rand(1);
-var = rand(1);
+mu = rand(1)
+var = rand(1)
 iterations = 10000;
 numsamp = 100;
 gmuN = zeros(numsamp,1);
@@ -75,7 +75,6 @@ title('Final Conjugate Prior for Gaussian','FontName','Times')
 xlabel('Numbers of Measurements','FontName','Times')
 ylabel('P(mu|D)','FontName','Times')
 hleg = legend('Gaussian');
-hyp
 
 %% For Binomial RV with unknown mean and variance
 n = randi(10)
@@ -98,7 +97,6 @@ for ii = 1:iterations
     muN2 = zeros(numsamp,1);
     muN2(1) = bino(1);
     c = bino(1);
-    conj2 = zeros(hypSize, numsamp);
     localhyp = zeros(numsamp, 2);
  
     for N = 2:numsamp

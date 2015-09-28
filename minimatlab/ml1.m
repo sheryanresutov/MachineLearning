@@ -13,24 +13,36 @@ numsamp = 100;
 gmuN = zeros(numsamp,1);
 gmse = zeros(numsamp,1);
 
-hyp = zeros(numsamp, 2); % mu, tau
-mu0 = 0.5;
-var0 = 0.5;
-arbvar = 0.5;
-hyp(1,:) = [mu0, var0];
+hyp = zeros(numsamp, 4); % mu, lambda, alpha, beta
+mu0 = 0;
+lambda = 5;
+alpha = 5;
+beta = 5;
+initparams = [mu0, lambda, alpha, beta];
+
+mypdf = @(mu0, lambda, a, b, x, t) (b.^a.*sqrt(lambda))./(gamma(a).*sqrt(2.*pi)).*...
+         t.^(a-.5).*exp(-b.*t).*exp((-lambda.*t.*(x-mu0).^2)/2);
+
 for ii = 1:iterations
     gaus = normrnd(mu,sqrt(var),numsamp,1);
     mse = zeros(numsamp,1);
     muN = zeros(numsamp,1);
     muN(1) = gaus(1);
-    localhyp = zeros(numsamp, 2);
+    localhyp = zeros(numsamp, 4);
+    localhyp(1,:) = initparams;
+    cumulativeSum = 0;
+    
     for N = 2:numsamp       
         err = gaus(N) - muN(N-1);
         muN(N) = muN(N-1) + err/N;
         mse(N) = err^2;
+        cumulativeSum = cumulativeSum + mse(N);
         
-        hyp(N, 1) = arbvar/(N*var0 + arbvar)*mu0 + (N*var0)/(N*var0+arbvar)*muN(N);
-        hyp(N, 2) = 1/var0 + N/arbvar;
+        localhyp(N, 1) = (lambda * mu0 + N * muN(N))/(lambda + N);
+        localhyp(N, 2) = lambda + N;
+        localhyp(N, 3) = alpha + N/2;
+        localhyp(N, 4) = beta + (0.5 * cumulativeSum) + ...
+            (N * lambda * (muN(N) - mu0)^2)/2 * (lambda + N);
     end
     gmuN = gmuN + muN;
     gmse = gmse + mse;
@@ -38,8 +50,7 @@ for ii = 1:iterations
 end
 gmuN = gmuN/iterations;
 gmse = gmse/iterations;
-hyp(2:end) = hyp(2:end)/iterations;
-hyp(:,2) = sqrt(1./hyp(:,2));
+hyp = hyp/iterations;
 
 %Plot sequential MLE, conjugate prior estimate
 figure 
@@ -57,25 +68,25 @@ xlabel('Numbers of Measurements','FontName','Times')
 ylabel('MSE','FontName','Times')
 hleg = legend('Gaussian');
 
-support = 0:0.01:1;
-%Plot conjugate prior
-figure
-subplot(2, 2, 1);
-plot(support, pdf('Normal', support, hyp(2, 1), hyp(2, 2)));
-title('Initial Conjugate Prior for Gaussian','FontName','Times')
-subplot(2, 2, 2);
-plot(support, pdf('Normal', support, hyp(numsamp/4, 1), hyp(numsamp/4, 2)));
-title('Numsamples/4 Conjugate Prior for Gaussian','FontName','Times')
-subplot(2, 2, 3);
-plot(support, pdf('Normal', support, hyp(numsamp/2, 1), hyp(numsamp/2, 2)));
-title('Numsamples/2 Conjugate Prior for Gaussian','FontName','Times')
-subplot(2, 2, 4);
-plot(support, pdf('Normal', support, hyp(numsamp, 1), hyp(numsamp, 2)));
-title('Final Conjugate Prior for Gaussian','FontName','Times')
-xlabel('Numbers of Measurements','FontName','Times')
-ylabel('P(mu|D)','FontName','Times')
-hleg = legend('Gaussian');
-hyp
+%Plot conjugate priors
+X = -10:.05:10;
+T = 0:.005:.1;
+[x,t] = meshgrid(X,T);
+figure;
+surf(x,t,mypdf(hyp(1,1), hyp(1,2), hyp(1,3), hyp(1,4), x, t));
+title('Initial Conjugate Prior for Gaussian','FontName','Times');
+
+figure;
+surf(x,t,mypdf(hyp(numsamp/4,1), hyp(numsamp/4,2), hyp(numsamp/4,3), hyp(numsamp/4,4), x, t));
+title('Numsamples/4 Conjugate Prior for Binomial','FontName','Times');
+
+figure;
+surf(x,t,mypdf(hyp(numsamp/2,1), hyp(numsamp/2,2), hyp(numsamp/2,3), hyp(numsamp/2,4), x, t));
+title('Numsamples/2 Conjugate Prior for Binomial','FontName','Times');
+
+figure;
+surf(x,t,mypdf(hyp(numsamp,1), hyp(numsamp,2), hyp(numsamp,3), hyp(numsamp,4), x, t));
+title('Final Conjugate Prior for Gaussian','FontName','Times');
 
 %% For Binomial RV with unknown mean and variance
 n = randi(10)

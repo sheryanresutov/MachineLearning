@@ -109,7 +109,6 @@ for ii = 1:iterations
     muN2 = zeros(numsamp,1);
     muN2(1) = bino(1);
     c = bino(1);
-    conj2 = zeros(hypSize, numsamp);
     localhyp = zeros(numsamp, 2);
  
     for N = 2:numsamp

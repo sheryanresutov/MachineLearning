@@ -14,8 +14,6 @@ beta = 25;
 numSamp = 20;
 nLines = 6;
 
-xSpace=linspace(-1,1,100);
-
 mu0 = 0;
 mu1 = 0;
 sigma0 = 1;
@@ -27,6 +25,7 @@ x = unifrnd(-1,1,1,numSamp);
 f = a0 + a1*x;
 noise = normrnd(0,sigmaN,1,numSamp);
 t = f + noise;
+
 phi = [];
 y = ones(1,numSamp);
 
@@ -46,7 +45,7 @@ title('before any data points')
 w0 = normrnd(mu0,sigma0,1,nLines);
 w1 = normrnd(mu1,sigma1,1,nLines);
     
-for ii = 1:6
+for ii = 1:nLines
     y = w0(ii) + w1(ii) * xsweep;
     subplot(4,3,f)
     hold on
@@ -91,7 +90,7 @@ for N = 1:numSamp
         ylabel('w1')
         title(['Observing with ',num2str(N),' data points'])
         
-        for ii = 1:6
+        for ii = 1:nLines
             y = w0(ii) + w1(ii) * xsweep;
             subplot(4,3,f)
             hold on
@@ -123,10 +122,10 @@ noise = normrnd(0,sigmaN,1,numSamp);
 t = sin(2*pi*X) + noise;
 
 PHI= [];
-p = zeros(iter,9);
+p = zeros(9,iter);
 phi = @(x,j) exp(-(x - 0.1*j).^2/sigmaN^2);
 for j = 1:nBases
-    p(:,j) = phi(x,j)';
+    p(j,:) = phi(x,j);
 end
 
 for N = 1:numSamp
@@ -136,17 +135,15 @@ for N = 1:numSamp
     Sn = inv(Sinv);
     mN = beta*Sn*PHI'*t(1:N)';
     
-    pred = (p * mN)';
-    v = diag(repmat(1/beta,iter,iter) + p*Sn*p')';
+    pred = (p' * mN)';
+    v = diag(repmat(1/beta,iter,iter) + p'*Sn*p)';
     topPred = pred + sqrt(v);
     botPred = pred - sqrt(v);
-    %v = repmat(1/beta,iter,iter) + p*Sn*p';
-    %topPred = pred + sqrt(v(:,N))';
-    %botPred = pred - sqrt(v(:,N))';
 
 	if(N==1||N==2||N==4||N==numSamp)
 	
 	subplot(2,2,i)
+    i=i+1;
     hold on;
 	plot(x,actual,'g');
 	plot(x,pred,'r');
@@ -160,7 +157,6 @@ for N = 1:numSamp
 	xlabel('x');
 	ylabel('t');	
     hold off;
-    i=i+1;
 	end
 end
 

@@ -22,7 +22,7 @@ sigma0 = 1;
 sigma1 = 1;
 
 xsweep = linspace(-1,1,100);
-
+xs = linspace(-1,1,1000);
 x = unifrnd(-1,1,1,numSamp);
 f = a0 + a1*x;
 noise = normrnd(0,sigmaN,1,numSamp);
@@ -30,28 +30,31 @@ t = f + noise;
 phi = [];
 y = ones(1,numSamp);
 
-[W0,W1] = meshgrid(linspace(-1,1,1000)', linspace(-1,1,1000)');
+figure
+f = 2;
+
+[W0,W1] = meshgrid(xs', xs');
 W = [W0(:) W1(:)];
 Wmean = [mu0 mu1];
 Wstdev = [sigma0 sigma1];
 p = mvnpdf(W, Wmean, Wstdev);
-subplot(1,3,2)
-surf(W0,W1,reshape(p,vals,vals),'edgecolor', 'none');
-view(2)
+subplot(4,3,f)
+f=f+1;
+surf(W0,W1,reshape(p,1000,1000),'edgecolor', 'none');view(2)
 title('before any data points')
 
 w0 = normrnd(mu0,sigma0,1,nLines);
 w1 = normrnd(mu1,sigma1,1,nLines);
     
-    for ii = 1:6
-            y = w0(ii) + w1(ii) * xsweep;
-            subplot(1,3,3)
-            hold on
-            plot(xsweep,y,'r');
-            xlabel('x')
-            ylabel('y')
-	end
-
+for ii = 1:6
+    y = w0(ii) + w1(ii) * xsweep;
+    subplot(4,3,f)
+    hold on
+    plot(xsweep,y,'r');
+    xlabel('x')
+	ylabel('y')
+end
+f=f+1;
 
 for N = 1:numSamp
     
@@ -69,20 +72,20 @@ for N = 1:numSamp
     w0 = normrnd(mu0,sigma0,1,nLines);
     w1 = normrnd(mu1,sigma1,1,nLines);
     
+    Wmean = [mu0 mu1];
+    Wstdev = [sigma0 sigma1];
     likelihood = normpdf(t(N),W0+W1*x(N),1/beta);
     
     if(N==1||N==2||N==20)
-        figure
         hold on
-        subplot(1,3,1)
-        surf(W0,W1,likelihood,'edgecolor','none');
-        view(2)
+        subplot(4,3,f)
+        f=f+1;
+        surf(W0,W1,likelihood,'edgecolor','none');view(2)
 
-        plot3(a0,a1,100,'w+')
-        subplot(1,3,2)
+        subplot(4,3,f)
+        f=f+1;
         p = mvnpdf(W, Wmean, Wstdev);
-        surf(W0,W1,reshape(p,1000,1000),'edgecolor', 'none');
-        view(2)
+        surf(W0,W1,reshape(p,1000,1000),'edgecolor', 'none');view(2)
 
         xlabel('w0')
         ylabel('w1')
@@ -90,38 +93,21 @@ for N = 1:numSamp
         
         for ii = 1:6
             y = w0(ii) + w1(ii) * xsweep;
-            subplot(1,3,3)
+            subplot(4,3,f)
             hold on
             plot(xsweep,y,'r');
             xlabel('x')
             ylabel('y')
         end
         plot(x(1:N),t(1:N),'bo');
+        f=f+1;
     end
     
 end
 
-% nLines = 6;
-% 
-% w0 = normrnd(0,1,1,nLines);
-% w1 = normrnd(0,1,1,nLines);
-% wMean = [0,0];
-% wSigma = [1,1];
-% 
-% 
-% 
-% x = linspace(-1,1,numSamp);
-% y = w0 + w1*x;
-% 
-% for i = 1:nLines
-% 	subplot(1,3,3)
-% 	plot(x,y,'r')
-% 	ylim([-1 1])
-% end
-
-
 
 %% Part 2
+figure
 alpha = 2;
 beta = 25;
 iter = 100;
@@ -139,7 +125,7 @@ t = sin(2*pi*X) + noise;
 PHI= [];
 p = zeros(iter,9);
 phi = @(x,j) exp(-(x - 0.1*j).^2/sigmaN^2);
-for j = 1:9
+for j = 1:nBases
     p(:,j) = phi(x,j)';
 end
 
@@ -170,7 +156,6 @@ for N = 1:numSamp
     h = fill(X1,Y,'r','edgecolor','none');
     set(h,'facealpha',0.2);
         
-	
 	title(['predictive distribution with ',num2str(N),' points']);
 	xlabel('x');
 	ylabel('t');	

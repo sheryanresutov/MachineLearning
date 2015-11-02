@@ -21,7 +21,7 @@ title('circles');
 x1 = 0:.01:20;
 mu = [1 8];
 s = 1;
-phi = @(x, m) x; % gaussian function
+phi = @(x, m) x;
 
 x = d.bimodal.x;
 y = d.bimodal.y;
@@ -32,7 +32,7 @@ title('bimodal');
 x1 = -5:.01:5;
 mu = [0, 0];
 s = 0;
-phi = @(x, m) x; % gaussian function
+phi = @(x, m) x;
 
 x = d.unimodal.x;
 y = d.unimodal.y;
@@ -51,6 +51,17 @@ binGaussianGenerativeModel(x,y,x1,mu,s,phi);
 title('spiral');
 
 %%
+x1 = 0:.01:2;
+mu = [1 1];
+s = 1;
+phi = @(x, m) exp(-(x-m).^2/(2*s^2)); % gaussian function
+
+x = d.circles.x;
+y = d.circles.y;
+logRegression(x,y,x1,mu,s,phi);
+title('circles');
+
+%%
 x = d.circles.x;
 y = d.circles.y;
 plotDataML3(d.circles.x, d.circles.y)
@@ -61,4 +72,5 @@ plotDataML3(d.unimodal.x, d.unimodal.y)
 title('unimodal')
 plotDataML3(d.spiral.x, d.spiral.y)
 title('spiral')
+
 

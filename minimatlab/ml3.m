@@ -5,14 +5,50 @@ clear all;close all;clc;
 
 data = 'data_ml3.mat';
 d = load(data);
-theData = cell(4,2);
+
+%%
+x1 = 0:.01:2;
+mu = [1 1];
+s = 1;
+phi = @(x, m) exp(-(x-m).^2/(2*s^2)); % gaussian function
 
 x = d.circles.x;
 y = d.circles.y;
-[mus, pCs]  = binGaussianGenerativeModel(x,y);
-x
-a = @(x, k) sum(x .* log(mus(k,:)) + (1 - x).*log(1-mus(k,:))) + log(pCs(k));
-a(x(11,:), 1)
+binGaussianGenerativeModel(x,y,x1,mu,s,phi);
+title('circles');
+
+%%
+x1 = 0:.01:20;
+mu = [1 8];
+s = 1;
+phi = @(x, m) x; % gaussian function
+
+x = d.bimodal.x;
+y = d.bimodal.y;
+binGaussianGenerativeModel(x,y,x1,mu,s,phi);
+title('bimodal');
+
+%%
+x1 = -5:.01:5;
+mu = [0, 0];
+s = 0;
+phi = @(x, m) x; % gaussian function
+
+x = d.unimodal.x;
+y = d.unimodal.y;
+binGaussianGenerativeModel(x,y,x1,mu,s,phi);
+title('unimodal');
+
+%%
+x1 = 0:.01:20;
+mu = [1 9];
+s = 4;
+phi = @(x, m) exp(-(x-m).^2/(2*s^2)); % gaussian function
+
+x = d.spiral.x;
+y = d.spiral.y;
+binGaussianGenerativeModel(x,y,x1,mu,s,phi);
+title('spiral');
 
 %%
 x = d.circles.x;
@@ -25,3 +61,4 @@ plotDataML3(d.unimodal.x, d.unimodal.y)
 title('unimodal')
 plotDataML3(d.spiral.x, d.spiral.y)
 title('spiral')
+

@@ -7,24 +7,37 @@ function [ ] = logRegression(x, y, x1, mu, s, phi)
     %phi - basis function
     
     features = x;
-    featuresTest = x;
     labels = y;
-    labelsTest = y;
     
-    designMatrix = [ones(length(labels), 1) phi(features(:,1), mu(1)) phi(features(:,2), mu(2))];
-    logSigmoid = @(a) 1/(1+exp(-a));
+    features = [phi(features(:,1), mu(1)) phi(features(:,2), mu(2))];
     w = rand(3,1);
-    gety = @(w, x) (w'*[ones(1, size(x,1)); x'])';
-    getR = @(y) diag(y .* (1- y));
+    designMatrix = [ones(length(labels),1) features];
+    
+    logSigmoid = @(a) 1./(1+exp(-a)); 
     err = 1;
-    while (err >= 1e-2)
-        y = gety(w,features);
-        R = getR(y);
+    while(err >= 1e-3)
+        prevErr = err;
+        y = logSigmoid(w' * designMatrix')';
+        R = diag(y .* (1 - y));
         error = y - labels;
         z = designMatrix*w - inv(R)*(error);
         w = inv(designMatrix'*R*designMatrix)*designMatrix'*R*z;
-        err = sum(error .^ 2)/length(labels)
+        err = sum(error .^ 2)/length(labels);
+        if (prevErr == err)
+            break;
+        end
     end
     
+    class0 = features(labels == 0,:);
+    class1 = features(labels == 1,:);
+    phiX1 = phi(x1, mu(1));
+    phiX2 = (-w(1) - w(2)*phiX1)/w(3); % w0 + w1(x1) + w2(x2) = 0, fe
+    
+    figure;
+    hold on;
+    scatter(class0(:,1), class0(:,2), 'r');
+    scatter(class1(:,1), class1(:,2), 'b');
+    plot(phiX1, phiX2, 'g');
+    legend('class0', 'class1', 'line');
+    hold off;
 end
-

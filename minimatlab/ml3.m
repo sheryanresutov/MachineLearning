@@ -6,18 +6,18 @@ clear all;close all;clc;
 data = 'data_ml3.mat';
 d = load(data);
 
-%%
-x1 = 0:.01:2;
-mu = [1 1];
-s = 1;
-phi = @(x, m) exp(-(x-m).^2/(2*s^2)); % gaussian function
 
-x = d.circles.x;
-y = d.circles.y;
-binGaussianGenerativeModel(x,y,x1,mu,s,phi);
-title('circles');
+%% - the data
+plotDataML3(d.circles.x, d.circles.y)
+title('the data - circles')
+plotDataML3(d.bimodal.x, d.bimodal.y)
+title('the data - bimodal')
+plotDataML3(d.unimodal.x, d.unimodal.y)
+title('the data - unimodal')
+plotDataML3(d.spiral.x, d.spiral.y)
+title('the data - spiral')
 
-%%
+%% BIMODAL
 x1 = 0:.01:20;
 mu = [1 8];
 s = 1;
@@ -25,10 +25,12 @@ phi = @(x, m) x;
 
 x = d.bimodal.x;
 y = d.bimodal.y;
+logRegression(x,y,x1,mu,s,phi);
+title('bimodal - logistic regression');             % bad classification
 binGaussianGenerativeModel(x,y,x1,mu,s,phi);
-title('bimodal');
+title('bimodal - gaussian generative');             % bad classification
 
-%%
+%% UNIMODAL
 x1 = -5:.01:5;
 mu = [0, 0];
 s = 0;
@@ -36,21 +38,26 @@ phi = @(x, m) x;
 
 x = d.unimodal.x;
 y = d.unimodal.y;
+logRegression(x,y,x1,mu,s,phi);
+title('unimodal - logistic regression')
 binGaussianGenerativeModel(x,y,x1,mu,s,phi);
-title('unimodal');
+title('unimodal - gaussian generative');
 
-%%
+%% SPIRAL
 x1 = 0:.01:20;
 mu = [1 9];
 s = 4;
-phi = @(x, m) exp(-(x-m).^2/(2*s^2)); % gaussian function
+%phi = @(x, m) exp(-(x-m).^2/(2*s^2)); % gaussian function
+phi = @(x, y) ; 
 
 x = d.spiral.x;
 y = d.spiral.y;
+logRegression(x,y,x1,mu,s,phi);             % bad classification
+title('spiral - logistic regression')
 binGaussianGenerativeModel(x,y,x1,mu,s,phi);
-title('spiral');
+title('spiral - gaussian generative');
 
-%%
+%% CIRCLES
 x1 = 0:.01:2;
 mu = [1 1];
 s = 1;
@@ -59,18 +66,8 @@ phi = @(x, m) exp(-(x-m).^2/(2*s^2)); % gaussian function
 x = d.circles.x;
 y = d.circles.y;
 logRegression(x,y,x1,mu,s,phi);
-title('circles');
-
-%%
-x = d.circles.x;
-y = d.circles.y;
-plotDataML3(d.circles.x, d.circles.y)
-title('circles')
-plotDataML3(d.bimodal.x, d.bimodal.y)
-title('bimodal')
-plotDataML3(d.unimodal.x, d.unimodal.y)
-title('unimodal')
-plotDataML3(d.spiral.x, d.spiral.y)
-title('spiral')
+title('circles - logistic regression')
+binGaussianGenerativeModel(x,y,x1,mu,s,phi);
+title('circles - gaussian generative');
 
 

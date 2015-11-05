@@ -22,7 +22,7 @@ function [ ] = logRegression(x, y, x1, mu, s, phi)
         error = y - labels;
         z = designMatrix*w - inv(R)*(error);
         w = inv(designMatrix'*R*designMatrix)*designMatrix'*R*z;
-        err = sum(error .^ 2)/length(labels)
+        err = sum(error .^ 2)/length(labels);
         if (prevErr == err)
             break;
         end
@@ -30,8 +30,9 @@ function [ ] = logRegression(x, y, x1, mu, s, phi)
     
     class0 = phi(x(labels == 0,:),mu(1));
     class1 = phi(x(labels == 1,:),mu(2));
-    phiX1 = phi(x1, mu(1))
-    phiX2 = (-w(1) - w(2)*phiX1)/w(3); % w0 + w1(x1) + w2(x2) = 0, fe
+    phiX1 = phi(x1, mu(1));
+    phiX2 = (-w(1) - w(2)*phiX1)/w(3);
+    % w0 + w1(x1) + w2(x2) = 0, fe
     
     figure;
     hold on;

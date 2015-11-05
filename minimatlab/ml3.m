@@ -21,13 +21,16 @@ title('the data - spiral')
 x1 = 0:.01:20;
 mu = [1 8];
 s = 1;
-phi = @(x, m) 21*cos(2*pi*0.2*sqrt(x.^2));
+phi = @(x, m) cos(2*pi*sqrt(x.^2));
+
 x = d.bimodal.x;
 y = d.bimodal.y;
 logRegression(x,y,x1,mu,s,phi);
 title('bimodal - logistic regression');             % bad classification
+
+phi = @(x, m) cos(2*pi*0.2*sqrt(x.^2));
 binGaussianGenerativeModel(x,y,x1,mu,s,phi);
-title('bimodal - gaussian generative');             % bad classification
+title('bimodal - gaussian generative');            
 
 %% UNIMODAL
 x1 = -5:.01:5;

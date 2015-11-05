@@ -27,7 +27,7 @@ function [ ] = binGaussianGenerativeModel(x, y, x1, mu, s, phi)
     phiX2 = (-w0 - w(1)*phiX1)/w(2); % w0 + w1(x1) + w2(x2) = 0, fe
 
     guess = w'*featuresTest' + w0 < 0; % if < 0 logistic, sigmoid > 0.5
-    accuracy = sum(guess'==labelsTest)/length(guess)
+    accuracy = sum(guess'==labelsTest)/length(guess);
 
     figure;
     hold on;

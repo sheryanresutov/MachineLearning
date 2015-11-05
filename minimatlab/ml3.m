@@ -21,8 +21,7 @@ title('the data - spiral')
 x1 = 0:.01:20;
 mu = [1 8];
 s = 1;
-phi = @(x, m) x;
-
+phi = @(x, m) 21*cos(2*pi*0.2*sqrt(x.^2));
 x = d.bimodal.x;
 y = d.bimodal.y;
 logRegression(x,y,x1,mu,s,phi);
@@ -47,8 +46,8 @@ title('unimodal - gaussian generative');
 x1 = 0:.01:20;
 mu = [1 9];
 s = 4;
-%phi = @(x, m) exp(-(x-m).^2/(2*s^2)); % gaussian function
-phi = @(x, y) ; 
+phi = @(x, m) exp(-(x-m).^2/(2*s^2)); % gaussian function
+%phi = @(x, y) ; 
 
 x = d.spiral.x;
 y = d.spiral.y;

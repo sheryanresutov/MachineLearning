@@ -45,11 +45,11 @@ def doScript(model, normalize, df,depVar):
         trainSet = df.iloc[traincv]
         testSet = df.iloc[testcv]
 
-        print(trainSet.columns[depVar])
+        # print(trainSet.columns[depVar])
 
         trainSetLabels = trainSet[trainSet.columns[depVar]]
         # NEED TO SPECIFY NUM BINS
-        num_bins = 2
+        num_bins = 5
         binner = get_binner(num_bins, df[df.columns[depVar]].min(), df[df.columns[depVar]].max())
         trainSetLabels = trainSetLabels.apply(binner)
         trainSetAtts = trainSet.drop(trainSet.columns[depVar], axis=1) 
@@ -84,20 +84,24 @@ depVarIndex = train.columns.get_loc(depVar)
 X = train.values.tolist()
 X = np.asarray(X)
 cv = cross_validation.KFold(len(X), n_folds=5)
-modelType = raw_input("Which model would you like to apply? (SVM, RF, LogReg) ")
-# model = SVC(C=int(1), kernel="rbf", gamma=float(0.1))
-if modelType == "SVM":
-    params=raw_input("Enter Parameters in this order (1 rbf 0.1 3): C Kernel Gamma Degree ")
-    params = params.split(" ")
-    model = SVC(C=int(params[0]), kernel=params[1], gamma=float(params[2]), degree=int(params[3]))
-elif modelType == "RF":
-    params=raw_input("Enter Parameters in this order (200 log2): NumOfEstimators MaxFeatures ")
-    params = params.split(" ")
-    model = RandomForestClassifier(n_estimators=int(params[0]), max_features=params[1])   
-elif modelType == "LogReg":
-    params=raw_input("Enter Parameters in this order (100000): C ")
-    params = params.split(" ")
-    model = linear_model.LogisticRegression(C=int(params[0]))
-else:
-    sys.exit()
+# modelType = raw_input("Which model would you like to apply? (SVM, RF, LogReg) ")
+model = SVC(C=int(1), kernel="rbf", gamma=float(0.1))
+# if modelType == "SVM":
+#     params=raw_input("Enter Parameters in this order (1 rbf 0.1 3): C Kernel Gamma Degree ")
+#     params = params.split(" ")
+#     model = SVC(C=int(params[0]), kernel=params[1], gamma=float(params[2]), degree=int(params[3]))
+# elif modelType == "RF":
+#     params=raw_input("Enter Parameters in this order (200 log2): NumOfEstimators MaxFeatures ")
+#     params = params.split(" ")
+#     model = RandomForestClassifier(n_estimators=int(params[0]), max_features=params[1])   
+# elif modelType == "LogReg":
+#     params=raw_input("Enter Parameters in this order (100000): C ")
+#     params = params.split(" ")
+#     model = linear_model.LogisticRegression(C=int(params[0]))
+# else:
+#     sys.exit()
+doScript(model,False,train,depVarIndex)
+model = RandomForestClassifier(n_estimators=200, max_features='log2')
+doScript(model,False,train,depVarIndex)
+model = linear_model.LogisticRegression(C=int(100))
 doScript(model,False,train,depVarIndex)

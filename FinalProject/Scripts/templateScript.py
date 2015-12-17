@@ -28,6 +28,17 @@ def get_query(attributes = [], year = ""):
             query += " AND " + attr + " != 'PrivacySuppressed' AND " + attr + " IS NOT NULL"
     return query
 
+def get_binner(num_bins, min_val, max_val):
+    def binner(val):
+        rng = max_val - min_val
+        bin_sz = rng / float(num_bins)
+        for i in range(num_bins):
+            if (i*bin_sz + min_val) > val:
+                return i
+        return num_bins
+    return binner
+
+
 def doScript(model, normalize, df,depVar):
     count=0
     for traincv, testcv in cv:
@@ -36,9 +47,15 @@ def doScript(model, normalize, df,depVar):
 
         print(trainSet.columns[depVar])
 
-        trainSetLabels = trainSet[trainSet.columns[depVar]] 
+        trainSetLabels = trainSet[trainSet.columns[depVar]]
+        # NEED TO SPECIFY NUM BINS
+        num_bins = 2
+        binner = get_binner(num_bins, df[df.columns[depVar]].min(), df[df.columns[depVar]].max())
+        trainSetLabels = trainSetLabels.apply(binner)
         trainSetAtts = trainSet.drop(trainSet.columns[depVar], axis=1) 
-        testSetLabels = testSet[testSet.columns[depVar]] 
+        testSetLabels = testSet[testSet.columns[depVar]]
+        testSetLabels = testSetLabels.apply(binner)
+
         testSetLabels = testSetLabels.values.tolist()
         testSetAtts = testSet.drop(testSet.columns[depVar], axis=1) 
         if normalize == True:
@@ -48,31 +65,27 @@ def doScript(model, normalize, df,depVar):
             model.fit(trainSetAtts,trainSetLabels)
             predicted = model.predict(testSetAtts)
         for i in range(len(testSetLabels)):
-            #if(testSetLabels[i] != predicted[i]):
-            if abs(int(testSetLabels[i]) - int(predicted[i]))>5000:
+            if testSetLabels[i] != predicted[i]:
                 count=count+1
-    print(str(df.size))
-    accuracy = str(1-count/float(df.size))
+    accuracy = str(1-count/float(len(df.index)))
     print("Train Accuracy is: "+accuracy)                
 
 
 con = sqlite3.connect('../Data/database.sqlite')
-attributes = raw_input("Enter attributes separated by comma: ")
+attributes = raw_input("Enter attributes separated by space: ")
 
-query = get_query(attributes.split(','), '2011')
+query = get_query(attributes.split(' '), '2011')
 depVar = raw_input("Enter target: ")
 
 train = pd.read_sql(query,con)
+print("train size: "+str(len(train.index)))
 depVarIndex = train.columns.get_loc(depVar)
-
-droppingIndicis=[]
-   
-train = train.dropna()
 
 X = train.values.tolist()
 X = np.asarray(X)
 cv = cross_validation.KFold(len(X), n_folds=5)
 modelType = raw_input("Which model would you like to apply? (SVM, RF, LogReg) ")
+# model = SVC(C=int(1), kernel="rbf", gamma=float(0.1))
 if modelType == "SVM":
     params=raw_input("Enter Parameters in this order (1 rbf 0.1 3): C Kernel Gamma Degree ")
     params = params.split(" ")
@@ -88,5 +101,3 @@ elif modelType == "LogReg":
 else:
     sys.exit()
 doScript(model,False,train,depVarIndex)
-
-

@@ -14,6 +14,20 @@ from sklearn import linear_model
 import sys
 import sqlite3 
 
+def get_query(attributes = [], year = ""):
+    query = "SELECT "
+    if len(attributes) > 0:
+        query += ",".join(attributes)
+    else:
+        query += "*"
+    query += " FROM Scorecard"
+    if len(attributes) > 0 and len(year) > 0:
+        query += " WHERE"
+        query += " year = " + year
+        for attr in attributes:
+            query += " AND " + attr + " != 'PrivacySuppressed' AND " + attr + " IS NOT NULL"
+    return query
+
 def doScript(model, normalize, df,depVar):
     count=0
     for traincv, testcv in cv:
@@ -34,8 +48,8 @@ def doScript(model, normalize, df,depVar):
             model.fit(trainSetAtts,trainSetLabels)
             predicted = model.predict(testSetAtts)
         for i in range(len(testSetLabels)):
-            if(testSetLabels[i] != predicted[i]):
-            #if abs(testSetLabels[i] - predicted[i])>0.10:
+            #if(testSetLabels[i] != predicted[i]):
+            if abs(int(testSetLabels[i]) - int(predicted[i]))>5000:
                 count=count+1
     print(str(df.size))
     accuracy = str(1-count/float(df.size))
@@ -44,13 +58,17 @@ def doScript(model, normalize, df,depVar):
 
 con = sqlite3.connect('../Data/database.sqlite')
 attributes = raw_input("Enter attributes separated by comma: ")
-query = 'select '+attributes+' from Scorecard where Year=2013'
+
+query = get_query(attributes.split(','), '2011')
 depVar = raw_input("Enter target: ")
 
 train = pd.read_sql(query,con)
 depVarIndex = train.columns.get_loc(depVar)
 
+droppingIndicis=[]
+   
 train = train.dropna()
+
 X = train.values.tolist()
 X = np.asarray(X)
 cv = cross_validation.KFold(len(X), n_folds=5)

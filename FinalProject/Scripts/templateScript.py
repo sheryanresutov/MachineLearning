@@ -44,16 +44,23 @@ def doScript(model, normalize, df,depVar):
     for traincv, testcv in cv:
         trainSet = df.iloc[traincv]
         testSet = df.iloc[testcv]
-
-        # print(trainSet.columns[depVar])
-
         trainSetLabels = trainSet[trainSet.columns[depVar]]
-        # NEED TO SPECIFY NUM BINS
-        num_bins = 5
-        binner = get_binner(num_bins, df[df.columns[depVar]].min(), df[df.columns[depVar]].max())
+        
+        #binsize
+        binsize=5
+        
+        binner = get_binner(binsize,df[df.columns[depVar]].min(),df[df.columns[depVar]].max())
+
+        rng = df[df.columns[depVar]].max() - df[df.columns[depVar]].min()
+        bin_sz = rng / float(binsize)
+        print("binsize: "+str(bin_sz))
+
+        # trainSetLabels = trainSetLabels.apply(float)
         trainSetLabels = trainSetLabels.apply(binner)
+        # print(trainSetLabels)
         trainSetAtts = trainSet.drop(trainSet.columns[depVar], axis=1) 
         testSetLabels = testSet[testSet.columns[depVar]]
+        # testSetLabels = testSetLabels.apply(float)
         testSetLabels = testSetLabels.apply(binner)
 
         testSetLabels = testSetLabels.values.tolist()

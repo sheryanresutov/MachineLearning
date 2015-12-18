@@ -11,5 +11,6 @@ Download the <b>database.sqlite</b>, which is part of this [zip](https://www.kag
 
 How To Run
 =================
+cd Scripts/
 * Classification: python templateScript.py
 * Lasso: python lasso.py

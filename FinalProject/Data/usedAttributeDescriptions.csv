@@ -1,0 +1,32 @@
+COSTT4_A,Average cost of attendance
+ADM_RATE_ALL,Admission rate for all campuses rolled up to the 6-digit OPE ID
+UGDS_BLACK,Total share of enrollment of undergraduate degree-seeking students who are black
+PPTUG_EF,Share of undergraduate part-time students who are degree-seeking or certificate-seeking
+INC_PCT_LO,"Percentage of aided students whose family income is between $0-$30,000"
+UG25abv,Percentage of undergraduates aged 25 and above
+PAR_ED_PCT_1STGEN,Percentage first-generation students
+PCTFLOAN,Percent of all federal undergraduate students receiving a federal student loan
+C150_4,"Completion rate for first-time, full-time students at four-year institutions"
+SATWR75,
+SATVR75,
+SATMR75,
+TUITIONFEE_IN,In-state tuition and fees
+TUITIONFEE_OUT,Out-of-state tuition and fees
+UGDS_WHITE,Total share of enrollment of undergraduate degree-seeking students who are white
+AVGFACSAL,Average faculty salary
+INC_PCT_M1,"Dependent students with family incomes between $30,001-$48,000 in nominal dollars"
+INC_PCT_M2,"Dependent students with family incomes between $48,001-$75,000 in nominal dollars"
+INC_PCT_H1,"Dependent students with family incomes between $75,001-$110,000 in nominal dollars"
+INC_PCT_H2,"Dependent students with family incomes between $110,001+ in nominal dollars"
+mn_earn_wne_p10,Mean earnings of students working and not enrolled 10 years after entry
+GRAD_DEBT_MDN,The median debt for students who have completed
+UGDS_ASIAN,Total share of enrollment of undergraduate degree-seeking students who are asian
+COMP_ORIG_YR6_RT,Percent completed within 6 years at original institution
+CDR3,Three-year cohort default rate
+ACTCMMID,Midpoint of the ACT cumulative score
+PCTPELL,Percentage of undergraduates who receive a Pell Grant
+NPT44_PRIV,"Average net price for $75,001-$110,000 family income"
+NPT45_PRIV,"Average net price for $110,000+ family income"
+TUITFTE,Net tuition revenue per full-time equivalent student
+DEBT_MDN,The original amount of the loan principal upon entering repayment
+IND_INC_PCT_LO,"Percentage of students who are financially dependent and have family incomes between $0-30,000"

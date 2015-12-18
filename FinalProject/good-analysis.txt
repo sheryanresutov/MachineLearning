@@ -1,0 +1,86 @@
+1 - full:
+mn_earn_wne_p10 vs
+ADM_RATE_ALL COSTT4_A UGDS_BLACK PPTUG_EF UG25abv PAR_ED_PCT_1STGEN PCTFLOAN C150_4 TUITIONFEE_OUT TUITIONFEE_IN UGDS_WHITE TUITFTE AVGFACSAL INC_PCT_LO UGDS PCTPELL DEBT_MDN INC_PCT_H2 
+with 8 bins;
+
+BinSize  13.4k 
+Min 20.7k
+Max 12.8k 
+LogReg 0.62 
+SVM 0.60 
+RF 0.72 
+
+1 - reduced:
+Doing the above but with just TUITFTE and INC_PCT_H2 keeps it at 72% and even increases it 
+
+BinSize:  26.7k
+Min: 13.1k
+Max: 227k
+LogReg: 0.71
+SVM: 0.59 
+RF: 0.73 
+
+
+2 - full:
+mn_earn_wne_p10 vs
+GRAD_DEBT_MDN COMP_ORIG_YR6_RT CDR3 ACTCMMID SATMT75 PCTFLOAN PCTPELL NPT44_PRIV NPT45_PRIV UGDS_WHITE UGDS_ASIAN UGDS_BLACK
+10 bins
+BinSize:  13k
+Min: 26.4k
+Max: 130.5k 
+LogReg: 0.43 
+SVM: 0.42 
+RF: 0.55
+
+2 - ??:
+mn_earn_wne_p10 vs GRAD_DEBT_MDN UGDS_ASIAN mn_earn_wne_p10
+10 bin 
+BinSize: 15.4k  
+Min: 12.3k
+Max: 166k
+LogReg: 0.50 
+SVM: 0.63 
+RF: 0.57 
+
+2 - reduced:
+mn_earn_wne_p10 vs GRAD_DEBT_MDN 
+10 bins
+BinSize:  21.5k 
+Min: 12.3k
+Max: 227k
+LogReg: 0.55
+SVM: 0.70 
+RF: 0.72
+
+
+
+3 INC_PCT_M1 INC_PCT_M2 INC_PCT_H1 INC_PCT_H2 CDR3 vs CDR3, basically income brackets vs default rate. 75% accuracy with 10 bins, gos down to 55% if only using INC_PCT_M1, which is most relevant, meaning all brackets are somewhat relevant
+BinSize:  0.1  
+Min: 0
+Max: 1 
+LogReg: 0.53 
+SVM: 0.50 
+RF: 0.75 
+
+
+4 - full:
+completion rate C150_4 vs
+COSTT4_A ADM_RATE_ALL UGDS_BLACK PPTUG_EF INC_PCT_LO UG25abv PAR_ED_PCT_1STGEN PCTFLOAN C150_4 SATVR75 SATWR75 SATMT75 TUITIONFEE_IN TUITIONFEE_OUT UGDS_WHITE AVGFACSAL TUITFTE
+with 5 bins
+BinSize:  0.18  
+Min: 0.057
+Max: 0.963 
+LogReg: 0.45 
+SVM: 0.37 
+RF: 0.62 
+
+4 - reduced:
+complete rate C150_4 vs
+COSTT4_A ADM_RATE_ALL C150_4 SATVR75 TUITIONFEE_OUT UGDS_WHITE
+with 5 bins
+BinSize: 0.18  
+Min: 0
+Max: 1 
+LogReg: 0.41 
+SVM: 0.38 
+RF: 0.62 
